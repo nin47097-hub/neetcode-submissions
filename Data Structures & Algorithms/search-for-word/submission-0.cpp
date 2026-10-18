@@ -1,0 +1,61 @@
+#include <vector>
+#include <string>
+#include <set>
+
+using namespace std;
+
+class Solution {
+public:
+    bool exist(vector<vector<char>>& board, string word) {
+        int rows = board.size();
+        int col = board[0].size();
+
+       
+        path.clear();
+
+        for(int r = 0; r < rows; r++) {
+            for(int c = 0; c < col; c++) {
+               
+                if (dfs(board, word, r, c, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false; 
+    }
+
+private: 
+   
+    set<pair<int, int>> path;
+
+    
+    bool dfs(vector<vector<char>>& board, string word, int r, int c, int i) {
+        int rows = board.size();
+        int col = board[0].size();
+
+        if(i == word.size()) {
+            return true;
+        }
+
+        if(r < 0 || c < 0 || r >= rows || c >= col) {
+            return false;
+        }
+
+        if(board[r][c] != word[i] || path.count({r, c})) {
+            return false;
+        }
+
+        path.insert({r, c});
+
+        
+        bool result = dfs(board, word, r + 1, c, i + 1) ||
+                      dfs(board, word, r - 1, c, i + 1) ||
+                      dfs(board, word, r, c + 1, i + 1) ||
+                      dfs(board, word, r, c - 1, i + 1);
+
+        path.erase({r, c});
+        
+        return result; 
+    }
+};
+
